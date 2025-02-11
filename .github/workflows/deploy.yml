@@ -20,11 +20,15 @@ jobs:
 
       - name: Debug SSH Connection
         run: ssh -v -o StrictHostKeyChecking=no -i DiGi_Salesta.pem ec2-user@54.95.36.216 "echo 'SSH Connected Successfully'"
+        continue-on-error: true
 
       - name: Deploy to EC2 Server
         run: |
+          set -e  # Exit immediately if any command fails
           ssh -o StrictHostKeyChecking=no -i DiGi_Salesta.pem ec2-user@54.95.36.216 << 'EOF'
             sudo rm -rf /var/www/html/*
-            git clone https://github.com/keramot-it/keramot-project-repo.git /var/www/html/
+            git clone https://${{ secrets.GITHUB_TOKEN }}@github.com/keramot-it/keramot-project-repo.git /var/www/html/
             sudo systemctl restart nginx
           EOF
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
