@@ -28,6 +28,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i DiGi_Salesta.pem ec2-user@54.95.36.216 << 'EOF'
             sudo chown -R ec2-user:ec2-user /var/www/html
             sudo rm -rf /var/www/html/*
-            git clone git@github.com:keramot-it/keramot-project-repo.git /var/www/html/
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            git clone https://github.com/keramot-it/keramot-project-repo.git /var/www/html/
             sudo systemctl restart nginx
           EOF
