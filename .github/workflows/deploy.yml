@@ -13,11 +13,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Debug SSH Connection
+       - name: Debug SSH Key
         run: |
-          echo -e "${{ secrets.EC2_SSH_KEY }}" > DiGi_Salesta.pem
-          chmod 600 DiGi_Salesta.pem
-          ssh -v -o StrictHostKeyChecking=no -i DiGi_Salesta.pem ec2-user@54.95.36.216        
+          echo "${{ secrets.EC2_SSH_KEY }}" > debug_key.pem
+          cat debug_key.pem        
 
       - name: Deploy to EC2 Server
         env:
