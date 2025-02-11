@@ -19,8 +19,8 @@ jobs:
           EC2_USER: ec2-user
           EC2_HOST: 54.95.36.216
         run: |
-          echo "$SSH_PRIVATE_KEY" > private_key.pem
-          chmod 400 private_key.pem
+          echo -e "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
           
           ssh -o StrictHostKeyChecking=no -i private_key.pem $EC2_USER@$EC2_HOST << EOF
             sudo rm -rf /var/www/html/*
