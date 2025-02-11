@@ -15,12 +15,15 @@ jobs:
 
       - name: Save SSH Key
         run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" | tr -d '\r' > private_key.pem
-          chmod 600 private_key.pem
+          echo "${{ secrets.EC2_SSH_KEY }}" > DiGi_Salesta.pem
+          chmod 600 DiGi_Salesta.pem
+
+      - name: Debug SSH Connection
+        run: ssh -v -o StrictHostKeyChecking=no -i DiGi_Salesta.pem ec2-user@54.95.36.216 "echo 'SSH Connected Successfully'"
 
       - name: Deploy to EC2 Server
         run: |
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ec2-user@54.95.36.216 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i DiGi_Salesta.pem ec2-user@54.95.36.216 << 'EOF'
             sudo rm -rf /var/www/html/*
             git clone https://github.com/keramot-it/keramot-project-repo.git /var/www/html/
             sudo systemctl restart nginx
