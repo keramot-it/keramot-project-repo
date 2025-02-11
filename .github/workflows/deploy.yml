@@ -1,0 +1,29 @@
+name: Deploy HTML to Amazon Linux
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Deploy to EC2 Server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          EC2_USER: ec2-user
+          EC2_HOST: 54.95.36.216
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 400 private_key.pem
+          
+          ssh -o StrictHostKeyChecking=no -i private_key.pem $EC2_USER@$EC2_HOST << EOF
+            sudo rm -rf /var/www/html/*
+            git clone https://github.com/keramot-it/keramot-project-repo.git /var/www/html/
+            sudo systemctl restart nginx
+          EOF
