@@ -26,9 +26,9 @@ jobs:
         run: |
           set -e  # Exit immediately if any command fails
           ssh -o StrictHostKeyChecking=no -i DiGi_Salesta.pem ec2-user@54.95.36.216 << 'EOF'
-            sudo chown -R ec2-user:ec2-user /var/www/html
-            sudo rm -rf /var/www/html/*
-            ssh-keyscan github.com >> ~/.ssh/known_hosts
-            git clone https://github.com/keramot-it/keramot-project-repo.git /var/www/html/
-            sudo systemctl restart nginx
+            sudo rm -rf /var/www/html/*  # Remove existing content
+            sudo chown -R ec2-user:ec2-user /var/www/html  # Ensure proper permissions
+            ssh-keyscan github.com >> ~/.ssh/known_hosts  # Add GitHub SSH key to known hosts
+            git clone https://github.com/keramot-it/keramot-project-repo.git /var/www/html/  # Clone repo to the directory
+            sudo systemctl restart nginx  # Restart nginx to apply changes
           EOF
